@@ -1,0 +1,17 @@
+.app-root {
+  min-height: 100vh;
+  background: #0f141a;
+  color: #f2f3f3;
+}
+
+.auth-modal-body {
+  max-height: 70vh;
+  overflow: auto;
+}
+
+.comment-card {
+  border: 1px solid #3f566f;
+  border-radius: 8px;
+  padding: 12px;
+  background: #1b2733;
+}

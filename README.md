@@ -31,12 +31,19 @@ Defined in `amplify/`:
 
 Google login is **conditionally enabled**:
 
-- Backend only configures Google OAuth if these env vars are present:
-  - `GOOGLE_CLIENT_ID_SECRET_NAME`
-  - `GOOGLE_CLIENT_SECRET_SECRET_NAME`
+- Backend only configures Google OAuth when these Amplify branch env values are set:
+  - `GOOGLE_OAUTH_ENABLED=true`
+  - `GOOGLE_OAUTH_CALLBACK_URLS` (comma-separated URLs)
+  - `GOOGLE_OAUTH_LOGOUT_URLS` (comma-separated URLs)
+- Optional env values:
+  - `GOOGLE_OAUTH_DOMAIN_PREFIX`
+  - `GOOGLE_CLIENT_ID_SECRET_NAME` (defaults to `GOOGLE_CLIENT_ID`)
+  - `GOOGLE_CLIENT_SECRET_SECRET_NAME` (defaults to `GOOGLE_CLIENT_SECRET`)
+- Required Amplify secure store secrets (default names):
+  - `GOOGLE_CLIENT_ID`
+  - `GOOGLE_CLIENT_SECRET`
 - Frontend only shows the Google button when Amplify outputs include `GOOGLE` as an identity provider.
-
-Use `.env.example` as the template.
+- Landing page reports missing values when Google setup is incomplete.
 
 ## Getting started
 
@@ -46,19 +53,13 @@ Use `.env.example` as the template.
    npm install
    ```
 
-2. (Optional) configure Google OAuth env vars:
-
-   ```bash
-   cp .env.example .env
-   ```
-
-3. Start Amplify sandbox (generates `amplify_outputs.json`):
+2. Start Amplify sandbox (generates `amplify_outputs.json`):
 
    ```bash
    npm run sandbox
    ```
 
-4. In another terminal, run the frontend:
+3. In another terminal, run the frontend:
 
    ```bash
    npm run dev
@@ -68,3 +69,4 @@ Use `.env.example` as the template.
 
 - `amplify_outputs.json` is committed as a placeholder and is replaced by sandbox/deployed outputs.
 - For production usage, update callback/logout URLs for your real domains.
+- Deployment should use Amplify branch environment variables and Amplify secure store for required values.

@@ -25,7 +25,13 @@ import {
 import type { SelectProps } from '@cloudscape-design/components';
 import { MarkdownEditorField } from './components/MarkdownEditorField';
 import { MarkdownView } from './components/MarkdownView';
-import { isAmplifyConfigured, isGoogleSignInConfigured } from './config/amplify';
+import {
+  googleOAuthMissingValues,
+  googleOAuthRequiredSecrets,
+  isAmplifyConfigured,
+  isGoogleSignInConfigured,
+  missingAmplifyOutputs,
+} from './config/amplify';
 import type { Schema } from '../amplify/data/resource';
 import './App.css';
 
@@ -473,9 +479,40 @@ function IdeaTrackerApp() {
           {flashItems.length > 0 && <Flashbar items={flashItems} />}
 
           {!isAmplifyConfigured && (
-            <Alert type="warning" header="Amplify backend outputs are missing">
-              Run <strong>npm run sandbox</strong> first so the app can connect to Auth,
-              Data, and Storage.
+            <Alert type="warning" header="Amplify configuration values are missing">
+              <SpaceBetween size="xs">
+                <Box>
+                  Missing outputs: <strong>{missingAmplifyOutputs.join(', ')}</strong>
+                </Box>
+                <Box variant="small">
+                  Deploy Amplify backend resources for this branch (or run{' '}
+                  <strong>npm run sandbox</strong> locally) so Auth, Data, and Storage
+                  values are generated in <code>amplify_outputs.json</code>.
+                </Box>
+              </SpaceBetween>
+            </Alert>
+          )}
+
+          {!isGoogleSignInConfigured && (
+            <Alert type="info" header="Google login is currently disabled">
+              <SpaceBetween size="xs">
+                <Box>To enable Google sign-in, set these Amplify environment values:</Box>
+                <ul className="config-list">
+                  {googleOAuthMissingValues.map((valueName) => (
+                    <li key={valueName}>
+                      <code>{valueName}</code>
+                    </li>
+                  ))}
+                </ul>
+                <Box>And configure these Amplify secure store secrets:</Box>
+                <ul className="config-list">
+                  {googleOAuthRequiredSecrets.map((secretName) => (
+                    <li key={secretName}>
+                      <code>{secretName}</code>
+                    </li>
+                  ))}
+                </ul>
+              </SpaceBetween>
             </Alert>
           )}
 
@@ -700,8 +737,8 @@ function IdeaTrackerApp() {
         <SpaceBetween size="s">
           {!isGoogleSignInConfigured && (
             <Alert type="info">
-              Google sign-in appears automatically after Google OAuth provider settings are
-              configured in Amplify Auth outputs.
+              Google sign-in appears automatically after missing Google OAuth values are
+              configured (listed on the landing page).
             </Alert>
           )}
           <div className="auth-modal-body">

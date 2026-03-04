@@ -70,3 +70,4 @@ Google login is **conditionally enabled**:
 - `amplify_outputs.json` is committed as a placeholder and is replaced by sandbox/deployed outputs.
 - For production usage, update callback/logout URLs for your real domains.
 - Deployment should use Amplify branch environment variables and Amplify secure store for required values.
+- `amplify.yml` is included and required for Amplify Hosting to run `ampx pipeline-deploy` (backend + frontend deploy).

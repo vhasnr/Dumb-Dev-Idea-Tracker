@@ -71,3 +71,22 @@ Google login is **conditionally enabled**:
 - For production usage, update callback/logout URLs for your real domains.
 - Deployment should use Amplify branch environment variables and Amplify secure store for required values.
 - `amplify.yml` is included and required for Amplify Hosting to run `ampx pipeline-deploy` (backend + frontend deploy).
+
+## Amplify Hosting IAM requirement (important)
+
+For Amplify Gen 2 fullstack branch deployments, the Amplify build role must include
+the AWS managed policy:
+
+- `arn:aws:iam::aws:policy/service-role/AmplifyBackendDeployFullAccess`
+
+If you use a custom Amplify service role and see errors like:
+
+- `AccessDeniedException: ... ssm:GetParameter ... parameter/cdk-bootstrap/hnb659fds/version`
+
+then update that role to include at least:
+
+- `ssm:GetParameter` on `arn:aws:ssm:*:*:parameter/cdk-bootstrap/*`
+- `ssm:GetParameter` / `ssm:GetParameters` / `ssm:GetParametersByPath` on `arn:aws:ssm:*:*:parameter/amplify/*`
+
+This permission is required for `npx ampx pipeline-deploy` to detect CDK bootstrap
+version and deploy backend resources.
